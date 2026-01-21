@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenProcessing Script Helper</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;background:#0e0e11;color:#eaeaf0;margin:0;padding:16px}
+  h1{font-size:22px;margin:8px 0}
+  section{border:1px solid #2a2a35;border-radius:12px;padding:12px;margin:12px 0}
+  p{margin:8px 0}
+  button,select,input,textarea{border-radius:10px;border:1px solid #333;background:#14141b;color:#fff;padding:8px}
+  button{cursor:pointer}
+  textarea{width:100%;min-height:70px}
+  .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+  #stage{position:relative;height:240px;border:1px dashed #333;border-radius:12px;overflow:hidden}
+  #char{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;height:120px}
+  .hidden{display:none}
+  .bubble{position:absolute;bottom:10px;left:10px;background:#fff;color:#000;padding:8px 10px;border-radius:12px;max-width:70%}
+</style>
+</head>
+<body>
+<h1>OpenProcessing Script Helper</h1>
+
+<section>
+  <p><button id="btnTourNew">New Tour</button> <button id="btnTourOpen">Open Tour</button> <button id="btnTour">Tour</button></p>
+  <p id="tourText">Welcome to my tour this is my stuff.</p>
+</section>
+
+<section>
+  <p><button id="btnMain">Main</button></p>
+  <div class="row">
+    <p><input type="file" id="svgUpload" accept="image/svg+xml" /> Upload Character (.SVG)</p>
+    <p><button id="btnShow">Show</button> <button id="btnHide">Hide</button></p>
+  </div>
+</section>
+
+<section>
+  <p><button id="btnScript">Script</button></p>
+  <p>Bubble text</p>
+  <textarea id="bubbleText">Welcome to my OpenProcessing Script Helper!</textarea>
+
+  <div class="row">
+    <p>X <input type="number" id="posX" min="-9999" max="9999" value="0" /></p>
+    <p>Y <input type="number" id="posY" min="-9999" max="9999" value="0" /></p>
+    <p><button id="btnMove">Move</button></p>
+  </div>
+
+  <div class="row">
+    <p>Font
+      <select id="fontSel">
+        <option value="system-ui">System</option>
+        <option value="Arial">Windows (Arial)</option>
+        <option value="Segoe UI">Windows (Segoe UI)</option>
+        <option value="Roboto">Android (Roboto)</option>
+      </select>
+    </p>
+    <p>Color <input type="color" id="bubbleColor" value="#000000" /></p>
+  </div>
+</section>
+
+<section>
+  <p><button id="btnSave">Save Project</button></p>
+  <div class="row">
+    <p><button data-ext=".opsh">.opsh</button></p>
+    <p><button data-ext=".exe">.exe</button></p>
+    <p><button data-ext=".apk">.apk</button></p>
+    <p><button data-ext=".html">.html</button></p>
+    <p><button data-ext=".mp4">.mp4</button></p>
+    <p><button data-ext=".avi">.avi</button></p>
+  </div>
+</section>
+
+<section>
+  <p><button id="btnSing">Sing</button></p>
+  <div class="row">
+    <p>Note <select id="note"> <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></p>
+    <p>Octave <input type="number" id="oct" min="1" max="8" value="4" /></p>
+    <p>Steps <input type="number" id="steps" min="1" max="8" value="4" /></p>
+    <p>Tempo <input type="number" id="tempo" min="120" max="256" value="120" /></p>
+  </div>
+</section>
+
+<section>
+  <p>Character Size</p>
+  <div class="row">
+    <p>Width <input type="number" id="cw" min="0" max="10000" value="120" /></p>
+    <p>Height <input type="number" id="ch" min="0" max="10000" value="120" /></p>
+  </div>
+</section>
+
+<section>
+  <p>TTS Voice</p>
+  <div class="row">
+    <p>Language
+      <select id="lang">
+        <option value="en-US">en-US American English</option>
+      </select>
+    </p>
+    <p>Voice
+      <select id="voice">
+        <option>#1</option><option>#2</option><option>#3</option><option>#4</option>
+        <option>#5</option><option>#6</option><option>#7</option><option>#8</option>
+        <option>Male #1</option><option>Male #2</option>
+        <option>Female #1</option><option>Female #2</option>
+      </select>
+    </p>
+    <p><button id="btnSpeak">Speak</button></p>
+  </div>
+</section>
+
+<section>
+  <div id="stage">
+    <img id="char" class="hidden" alt="character" />
+    <div id="bubble" class="bubble hidden"></div>
+  </div>
+</section>
+
+<script>
+const char = document.getElementById('char');
+const bubble = document.getElementById('bubble');
+
+svgUpload.onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const url = URL.createObjectURL(f);
+  char.src = url; char.classList.remove('hidden');
+};
+
+btnShow.onclick = ()=> char.classList.remove('hidden');
+btnHide.onclick = ()=> char.classList.add('hidden');
+
+btnMove.onclick = ()=>{
+  const x = Number(posX.value), y = Number(posY.value);
+  char.style.left = `calc(50% + ${x}px)`;
+  char.style.top  = `calc(50% + ${y}px)`;
+};
+
+bubbleText.oninput = ()=>{
+  bubble.textContent = bubbleText.value;
+  bubble.classList.remove('hidden');
+};
+
+fontSel.onchange = ()=> bubble.style.fontFamily = fontSel.value;
+bubbleColor.oninput = ()=> bubble.style.color = bubbleColor.value;
+
+cw.oninput = ()=> char.style.width = cw.value+'px';
+ch.oninput = ()=> char.style.height = ch.value+'px';
+
+// Save (mock exports; real browsers can reliably save text/html)
+document.querySelectorAll('[data-ext]').forEach(b=>{
+  b.onclick = ()=>{
+    const ext = b.dataset.ext;
+    const data = {text:bubbleText.value,x:posX.value,y:posY.value};
+    let blob;
+    if(ext === '.html'){
+      blob = new Blob([document.documentElement.outerHTML],{type:'text/html'});
+    } else {
+      blob = new Blob([JSON.stringify(data,null,2)],{type:'application/octet-stream'});
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'project'+ext;
+    a.click();
+  };
+});
+
+// Sing (simple WebAudio beep sequence)
+btnSing.onclick = async ()=>{
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  const base = {A:440,B:494,C:262,D:294,E:330,F:349,G:392}[note.value];
+  for(let i=0;i<steps.value;i++){
+    const o = ctx.createOscillator();
+    o.frequency.value = base * Math.pow(2, oct.value-4);
+    o.connect(ctx.destination); o.start();
+    await new Promise(r=>setTimeout(r,60000/tempo.value));
+    o.stop();
+  }
+};
+
+// TTS
+btnSpeak.onclick = ()=>{
+  const u = new SpeechSynthesisUtterance(bubbleText.value);
+  u.lang = lang.value;
+  speechSynthesis.speak(u);
+};
+</script>
+</body>
+                                                                         </html>
+  
