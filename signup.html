@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+
+<!-- Archivo Black Font -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: #000;
+        color: #fff;
+        font-family: 'Archivo Black', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .signup-box {
+        width: 320px;
+        padding: 24px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        background: #000;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 14px;
+        display: block;
+        margin-top: 12px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        background: #111;
+        border: 1px solid #555;
+        color: #fff;
+        border-radius: 4px;
+        font-family: inherit;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 18px;
+        padding: 10px;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 4px;
+        font-family: inherit;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #ccc;
+    }
+
+    p.small {
+        font-size: 11px;
+        color: #aaa;
+        margin-top: 4px;
+    }
+
+    .error {
+        color: #ff5555;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .success {
+        color: #55ff55;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 12px;
+    }
+</style>
+</head>
+<body>
+
+<div class="signup-box">
+    <h1>Sign Up</h1>
+
+    <form id="signupForm">
+        <label>Email</label>
+        <input type="email" id="email">
+        <div class="error" id="emailError"></div>
+
+        <label>Username</label>
+        <input type="text" id="username">
+        <p class="small">Can't be as the same as e-mail</p>
+        <div class="error" id="usernameError"></div>
+
+        <label>Name</label>
+        <input type="text" id="name">
+        <div class="error" id="nameError"></div>
+
+        <label>Password</label>
+        <input type="password" id="password">
+        <div class="error" id="passwordError"></div>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="success" id="successMsg"></div>
+</div>
+
+<script>
+document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const username = usernameInput.value.trim();
+    const name = nameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    let valid = true;
+
+    // Clear messages
+    document.querySelectorAll(".error").forEach(el => el.textContent = "");
+    successMsg.textContent = "";
+
+    if (!email) {
+        emailError.textContent = "This field is required.";
+        valid = false;
+    }
+
+    if (!username) {
+        usernameError.textContent = "This field is required.";
+        valid = false;
+    }
+
+    if (!name) {
+        nameError.textContent = "This field is required.";
+        valid = false;
+    }
+
+    if (!password) {
+        passwordError.textContent = "This field is required.";
+        valid = false;
+    }
+
+    if (email && (username === email || name === email)) {
+        usernameError.textContent = "Can't be as the same as e-mail";
+        valid = false;
+    }
+
+    if (valid) {
+        successMsg.textContent = "The sign-up was successfully completed.";
+        document.getElementById("signupForm").reset();
+    }
+});
+
+// Short refs
+const emailInput = document.getElementById("email");
+const usernameInput = document.getElementById("username");
+const nameInput = document.getElementById("name");
+const passwordInput = document.getElementById("password");
+
+const emailError = document.getElementById("emailError");
+const usernameError = document.getElementById("usernameError");
+const nameError = document.getElementById("nameError");
+const passwordError = document.getElementById("passwordError");
+const successMsg = document.getElementById("successMsg");
+</script>
+
+</body>
+</html>
+  
